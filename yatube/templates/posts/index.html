@@ -18,10 +18,10 @@
           <li>
             <a href="{% url 'posts:group_list' post.group.slug %}">все записи группы</a>
           </li>
-        % endif %}
+        {% endif %}
         {% if not forloop.last %}<hr>{% endif %}
-     {% endfor %}
-   {% endcache %}
+       {% endfor %}
+     {% endcache %}
      {% include 'posts/includes/paginator.html' %}
    </div>
 {% endblock %}

@@ -1,25 +1,11 @@
 from django.contrib.auth import get_user_model
-from django.test import TestCase
-from ..models import Group, Post
-
+from .mytestcase import MyTestCase, TEMP_MEDIA_ROOT
 User = get_user_model()
+from django.test import override_settings
 
 
-class PostModelTest(TestCase):
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.user = User.objects.create_user(username='auth')
-        cls.group = Group.objects.create(
-            title='Тестовая группа',
-            slug='Тестовый слаг',
-            description='Тестовое описание'
-        )
-        cls.post = Post.objects.create(
-            author=cls.user,
-            text='Тестовый пост достаточно длинный'
-        )
-
+@override_settings(MEDIA_ROOT=TEMP_MEDIA_ROOT)
+class PostModelTest(MyTestCase):
     def test_verbose_name(self):
         """verbose_name в полях совпадает с ожидаемым."""
         post = PostModelTest.post
@@ -28,6 +14,7 @@ class PostModelTest(TestCase):
             'text': 'Текст поста',
             'group': 'Название группы',
             'pub_date': 'Дата публикации поста',
+            'image': 'Картинка'
         }
         for field, expected_value in field_verboses.items():
             with self.subTest(field=field):
