@@ -1,7 +1,8 @@
 from django.contrib.auth import get_user_model
 from .mytestcase import MyTestCase, TEMP_MEDIA_ROOT
-User = get_user_model()
 from django.test import override_settings
+
+User = get_user_model()
 
 
 @override_settings(MEDIA_ROOT=TEMP_MEDIA_ROOT)
