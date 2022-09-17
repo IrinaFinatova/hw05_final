@@ -24,8 +24,7 @@ def index(request):
     following = False
     if request.user.is_authenticated:
         following = request.user.follower.exists()
-    context = {'posts': posts,
-               'page_obj': page_obj,
+    context = {'page_obj': page_obj,
                'following': following}
     return render(request, template, context)
 
@@ -36,7 +35,6 @@ def group_posts(request, slug):
     posts = group.posts.select_related('author', 'group')
     page_obj = paginator_page(request, posts)
     context = {'group': group,
-               'posts': posts,
                'page_obj': page_obj}
     return render(request, template, context)
 
@@ -49,8 +47,7 @@ def profile(request, username):
     following = False
     if request.user.is_authenticated and request.user != author:
         following = author.following.exists()
-    context = {'posts': posts,
-               'author': author,
+    context = {'author': author,
                'page_obj': page_obj,
                'following': following}
     return render(request, template, context)
@@ -115,17 +112,14 @@ def follow_index(request):
         'author', 'group').filter(
         author__following__user=request.user)
     page_obj = paginator_page(request, posts)
-    context = {'posts': posts,
-               'page_obj': page_obj}
+    context = {'page_obj': page_obj}
     return render(request, 'posts/follow.html', context)
 
 
 @login_required
 def profile_follow(request, username):
     author = get_object_or_404(User, username=username)
-    follower = Follow.objects.filter(user=request.user,
-                                     author=author)
-    if author != request.user and not follower.exists():
+    if author != request.user:
         Follow.objects.get_or_create(user=request.user,
                                      author=author)
     return redirect('posts:profile', username=author)
